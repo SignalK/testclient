@@ -1,0 +1,22 @@
+{
+  "name": "signalk-testclient",
+  "version": "0.0.0",
+  "description": "Signal K test client to test a server's features and validate compatibility",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "signalk",
+    "client"
+  ],
+  "author": "teppo.kurki@iki.fi",
+  "license": "Apache 2",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "signalk-schema": "git://github.com/SignalK/specification",
+    "signalk-client": "SignalK/signalk-js-client",
+  }
+}
