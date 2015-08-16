@@ -20,16 +20,34 @@ var signalk_client = require('signalk-client');
 
 var client = new signalk_client.Client();
 
-function onData(data) {
-	console.log(data);
-};
 
 function onConnect() {
-	console.log("Connected");
+  console.log("Connected");
 }
 
 function onDisconnect() {
-	console.log("Disconnected");
 }
 
-client.connect(onData, onConnect, onDisconnect);
+var args = process.argv.slice(2);
+
+var options = {
+  onData: function (data) {
+    console.log(JSON.stringify(data));
+  },
+  onConnect: function () {
+    console.log("Connected");
+  },
+  onDisconnect: function () {
+  console.log("Disconnected");
+  },
+  onError: function(error) {
+    console.log(error);
+  }
+};
+
+if (args.length === 2) {
+  options.host = args[0];
+  options.port = args[1];
+}
+
+client.connect(options);
