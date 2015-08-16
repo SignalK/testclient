@@ -17,6 +17,7 @@
 */
 
 var signalk_client = require('signalk-client');
+var schema = require('signalk-schema')
 
 var client = new signalk_client.Client();
 
@@ -32,7 +33,13 @@ var args = process.argv.slice(2);
 
 var options = {
   onData: function (data) {
-    console.log(JSON.stringify(data));
+    var validationResult = schema.validateDelta(data);
+    if (!validationResult.valid) {
+      console.log(JSON.stringify(data, null, 2));
+      validationResult.errors.forEach(function(error) {
+        console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
+      });
+    }
   },
   onConnect: function () {
     console.log("Connected");
