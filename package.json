@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "signalk-schema": "git://github.com/SignalK/specification",
-    "signalk-client": "SignalK/signalk-js-client",
+    "signalk-client": "SignalK/signalk-js-client"
   }
 }
