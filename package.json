@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "chai": "^3.2.0",
-    "signalk-client": "SignalK/signalk-js-client",
+    "signalk-client": "SignalK/signalk-js-client#update-urls",
     "signalk-schema": "SignalK/specification"
   }
 }
