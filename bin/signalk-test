@@ -17,6 +17,9 @@
 */
 
 var signalk_client = require('signalk-client');
+var isDelta = signalk_client.isDelta;
+var isHello = signalk_client.isHello;
+
 var schema = require('signalk-schema')
 
 var client = new signalk_client.Client();
@@ -32,13 +35,18 @@ function onDisconnect() {
 var args = process.argv.slice(2);
 
 var options = {
-  onData: function (data) {
-    var validationResult = schema.validateDelta(data);
-    if (!validationResult.valid) {
-      console.log(JSON.stringify(data));
-      validationResult.errors.forEach(function(error) {
-        console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
-      });
+  onData: function(data) {
+    if (isHello(data)) {
+      console.log("Version:" + data.version);
+    }
+    if (isDelta(data)) {
+      var validationResult = schema.validateDelta(data);
+      if (!validationResult.valid) {
+        console.log(JSON.stringify(data));
+        validationResult.errors.forEach(function(error) {
+          console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
+        });
+      }
     }
   },
   onConnect: function () {
