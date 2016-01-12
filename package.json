@@ -16,7 +16,8 @@
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "signalk-schema": "git://github.com/SignalK/specification",
-    "signalk-client": "SignalK/signalk-js-client"
+    "cli-spinner": "^0.2.1",
+    "signalk-client": "SignalK/signalk-js-client",
+    "signalk-schema": "git://github.com/SignalK/specification"
   }
 }

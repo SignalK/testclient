@@ -20,6 +20,8 @@ var signalk_client = require('signalk-client');
 var isDelta = signalk_client.isDelta;
 var isHello = signalk_client.isHello;
 
+var Spinner = require('cli-spinner').Spinner;
+
 var schema = require('signalk-schema')
 
 var client = new signalk_client.Client();
@@ -33,12 +35,19 @@ function onDisconnect() {}
 
 var args = process.argv.slice(2);
 
+Spinner.setDefaultSpinnerString('|/-\\');
+var spinner = new Spinner();
+var spinning = false;
+var lastMsgReceived = 0;
+
 var options = {
   onData: function(data) {
     if (isHello(data)) {
       console.log("Version:" + data.version);
+
     }
     if (isDelta(data)) {
+      lastMsgReceived = new Date().getTime();
       var validationResult = schema.validateDelta(data);
       if (!validationResult.valid) {
         console.log(JSON.stringify(data));
@@ -65,3 +74,19 @@ if (args.length === 2) {
 }
 
 client.connect(options);
+
+
+function hasFreshData() {
+  return result = new Date().getTime() - lastMsgReceived < 500;
+}
+
+setInterval(function() {
+  if (hasFreshData() && !spinning) {
+    spinner.start();
+    spinning = true;
+  }
+  if (spinning && !hasFreshData()) {
+    spinner.stop();
+    spinning = false;
+  }
+}, 200);
