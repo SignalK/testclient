@@ -57,8 +57,10 @@ var options = {
       }
     }
   },
-  onConnect: function() {
+  onConnect: function(connection) {
     console.log("Connected");
+    var sub = '{"context":"vessels.self","subscribe":[{"path":"*"}]}';
+    connection.send(sub);
   },
   onDisconnect: function() {
     console.log("Disconnected");
