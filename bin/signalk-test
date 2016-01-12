@@ -29,8 +29,7 @@ function onConnect() {
   console.log("Connected");
 }
 
-function onDisconnect() {
-}
+function onDisconnect() {}
 
 var args = process.argv.slice(2);
 
@@ -49,11 +48,11 @@ var options = {
       }
     }
   },
-  onConnect: function () {
+  onConnect: function() {
     console.log("Connected");
   },
-  onDisconnect: function () {
-  console.log("Disconnected");
+  onDisconnect: function() {
+    console.log("Disconnected");
   },
   onError: function(error) {
     console.log(error);
