@@ -26,7 +26,6 @@ var schema = require('signalk-schema')
 
 var client = new signalk_client.Client();
 
-
 function onConnect() {
   console.log("Connected");
 }
@@ -44,17 +43,13 @@ var options = {
   onData: function(data) {
     if (isHello(data)) {
       console.log("Version:" + data.version);
-
     }
+    lastMsgReceived = new Date().getTime();
     if (isDelta(data)) {
-      lastMsgReceived = new Date().getTime();
-      var validationResult = schema.validateDelta(data);
-      if (!validationResult.valid) {
-        console.log(JSON.stringify(data));
-        validationResult.errors.forEach(function(error) {
-          console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
-        });
-      }
+      checkDelta(data);
+      var full = schema.deltaToFull(data);
+      schema.fillIdentity(full);
+      checkFull(full);
     }
   },
   onConnect: function(connection) {
@@ -77,6 +72,26 @@ if (args.length === 2) {
 
 client.connect(options);
 
+function checkFull(data) {
+  var validationResult = schema.validateFull(data);
+  if (!validationResult.valid) {
+    console.log("Delta converted to full:")
+    console.log(JSON.stringify(data, null, 2));
+    validationResult.errors.forEach(function(error) {
+      console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
+    });
+  }
+}
+
+function checkDelta(data) {
+  var validationResult = schema.validateDelta(data);
+  if (!validationResult.valid) {
+    console.log(JSON.stringify(data));
+    validationResult.errors.forEach(function(error) {
+      console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
+    });
+  }
+}
 
 function hasFreshData() {
   return result = new Date().getTime() - lastMsgReceived < 500;
