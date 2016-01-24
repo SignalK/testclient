@@ -17,6 +17,8 @@
 */
 
 var signalk_client = require('signalk-client');
+var deltaDebug = require('debug')("signalk:delta");
+var fullDebug = require('debug')("signalk:full");
 var isDelta = signalk_client.isDelta;
 var isHello = signalk_client.isHello;
 
@@ -25,6 +27,9 @@ var Spinner = require('cli-spinner').Spinner;
 var schema = require('signalk-schema')
 
 var client = new signalk_client.Client();
+
+console.log("NOTE: If you get validation errors some of them may be false positives, notably ones with a reference to _anyOf_ in the path.")
+console.log("The validator in use creates false extra error messages when there is at least one real error.")
 
 function onConnect() {
   console.log("Connected");
@@ -46,14 +51,16 @@ var options = {
     }
     lastMsgReceived = new Date().getTime();
     if (isDelta(data)) {
+      deltaDebug(JSON.stringify(data, null, 2))
       checkDelta(data);
       var full = schema.deltaToFull(data);
       schema.fillIdentity(full);
+      fullDebug(JSON.stringify(full, null, 2))
       checkFull(full);
     }
   },
   onConnect: function(connection) {
-    console.log("Connected");
+    console.log("Connected to " + connection.host);
     var sub = '{"context":"vessels.self","subscribe":[{"path":"*"}]}';
     connection.send(sub);
   },

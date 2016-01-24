@@ -1,12 +1,12 @@
 # Client to test Signal K servers and gateways
 
-This test client tries to be a simple tool that one can fire up to discover & connect to Signal K servers/gateways, more specifically to their streaming WebSocket service. 
+This test client tries to be a simple tool that one can fire up to discover & connect to Signal K servers/gateways, more specifically to their streaming WebSocket service.
 
 Once connected the client verifies the schema compliance of the messages it receives and reports errors.
 
-# Installation 
+# Installation
 
-Install dependencies with `npm install`. 
+Install dependencies with `npm install`.
 
 For Bonjour/mdns you need to install the optional mdns library with `npm install mdns`. On OS X the operating system has built in support for mDNS, on others you need to install avahi or Bonjour for Windows (not tested on Windows, let us know if it works).
 
