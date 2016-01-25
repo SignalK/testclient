@@ -63,6 +63,7 @@ var options = {
     console.log("Connected to " + connection.host);
     var sub = '{"context":"vessels.self","subscribe":[{"path":"*"}]}';
     connection.send(sub);
+    startRestChecker();
   },
   onDisconnect: function() {
     console.log("Disconnected");
@@ -78,6 +79,17 @@ if (args.length === 2) {
 }
 
 client.connect(options);
+
+function startRestChecker() {
+  setInterval(function() {
+    client.get('/signalk/v1/api/').then(function(response) {
+      checkFull(response.body);
+    }).catch(function(e) {
+      console.error(e.response ? e.response.error : e);
+    });
+  }, 1000);
+}
+
 
 function checkFull(data) {
   var validationResult = schema.validateFull(data);
