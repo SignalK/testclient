@@ -82,8 +82,8 @@ client.connect(options);
 
 function startRestChecker() {
   setInterval(function() {
-    client.get('/signalk/v1/api/').then(function(response) {
-      checkFull(response.body);
+    client.get('').then(function(full) {
+      checkFull(full);
     }).catch(function(e) {
       console.error(e.response ? e.response.error : e);
     });
@@ -94,7 +94,6 @@ function startRestChecker() {
 function checkFull(data) {
   var validationResult = schema.validateFull(data);
   if (!validationResult.valid) {
-    console.log("Delta converted to full:")
     console.log(JSON.stringify(data, null, 2));
     validationResult.errors.forEach(function(error) {
       console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
