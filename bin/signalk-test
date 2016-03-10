@@ -82,8 +82,8 @@ client.connect(options);
 
 function startRestChecker() {
   setInterval(function() {
-    client.get('').then(function(full) {
-      checkFull(full);
+    client.apiGet('/').then(function(response) {
+      checkFull(response.body);
     }).catch(function(e) {
       console.error(e.response ? e.response.error : e);
     });
