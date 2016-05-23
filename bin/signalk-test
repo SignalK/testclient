@@ -16,30 +16,24 @@
  * limitations under the License.
 */
 
-var signalk_client = require('signalk-client');
-var deltaDebug = require('debug')("signalk:delta");
-var fullDebug = require('debug')("signalk:full");
+var deltaDebug = require("debug")("signalk:delta");
+var fullDebug = require("debug")("signalk:full");
+var JSONPath = require("JSONPath");
+var signalk_client = require("signalk-client");
+var schema = require("signalk-schema");
+var Spinner = require("cli-spinner").Spinner;
+
 var isDelta = signalk_client.isDelta;
 var isHello = signalk_client.isHello;
-
-var Spinner = require('cli-spinner').Spinner;
-
-var schema = require('signalk-schema')
-
 var client = new signalk_client.Client();
 
-console.log("NOTE: If you get validation errors some of them may be false positives, notably ones with a reference to _anyOf_ in the path.")
+console.log("NOTE: If you get validation errors some of them may be false positives, " +
+            "notably ones with a reference to _anyOf_ in the path.");
 console.log("The validator in use creates false extra error messages when there is at least one real error.")
-
-function onConnect() {
-  console.log("Connected");
-}
-
-function onDisconnect() {}
 
 var args = process.argv.slice(2);
 
-Spinner.setDefaultSpinnerString('|/-\\');
+Spinner.setDefaultSpinnerString("|/-\\-");
 var spinner = new Spinner();
 var spinning = false;
 var lastMsgReceived = 0;
@@ -90,25 +84,46 @@ function startRestChecker() {
   }, 1000);
 }
 
-
 function checkFull(data) {
   var validationResult = schema.validateFull(data);
   if (!validationResult.valid) {
-    console.log(JSON.stringify(data, null, 2));
-    validationResult.errors.forEach(function(error) {
-      console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
-    });
+    printError(data, validationResult.errors);
   }
 }
 
 function checkDelta(data) {
   var validationResult = schema.validateDelta(data);
   if (!validationResult.valid) {
-    console.log(JSON.stringify(data));
-    validationResult.errors.forEach(function(error) {
-      console.error(error.message + "\n " + error.dataPath + "\n " + error.schemaPath)
-    });
+    printError(data, validationResult.errors);
   }
+}
+
+function printError(data, errors) {
+  errors.forEach(function(error) {
+    var path = undefined;
+    if(error.dataPath) {
+      var parent = error.dataPath.split('/');
+      if(parent.length > 0) {
+        parent.pop();
+      }
+      path = '$' + parent.join('.');
+    }
+
+    console.error("\n---VALIDATION ERROR---");
+    console.error("      ERROR:", error.message);
+    console.error("  DATA PATH:", error.dataPath);
+    console.error("SCHEMA PATH:", error.schemaPath);
+
+    if(path) {
+      var context = JSONPath({
+        path: path,
+        json: data
+      });
+      console.error(JSON.stringify(context[0], null, 2));
+    } else {
+      console.error(JSON.stringify(data, null, 2));
+    }
+  });
 }
 
 function hasFreshData() {
