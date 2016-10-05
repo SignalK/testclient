@@ -68,7 +68,7 @@ var options = {
 };
 
 if (args.length === 2) {
-  options.host = args[0];
+  options.hostname = args[0];
   options.port = args[1];
 }
 
