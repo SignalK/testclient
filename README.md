@@ -25,4 +25,6 @@ Once installed, you should be able to ping your Raspberry Pi by `ping raspberryp
 
 `bin/signalk-test localhost 3000` will try to connect directly to the specified address.
 
+An optional third command line parameter will be used as the `?suscribe=` parameter in [delta connection url](http://signalk.org/specification/master/streaming_api.html). The default is `all`.
+
 Test client uses [debug](https://www.npmjs.com/package/debug) for logging. You can enable logging by setting the environment variable `DEBUG` to `signalk:*`.
