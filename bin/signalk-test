@@ -64,12 +64,17 @@ var options = {
   },
   onError: function(error) {
     console.log(error);
-  }
+  },
+  subscribe: "all"
+
 };
 
 if (args.length === 2) {
   options.hostname = args[0];
   options.port = args[1];
+}
+if (args.length === 3) {
+  subscribe = args[2]
 }
 
 client.connect(options);
