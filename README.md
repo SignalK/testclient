@@ -1,5 +1,7 @@
 # Client to test Signal K servers and gateways
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/SignalK/testclient.svg)](https://greenkeeper.io/)
+
 This test client tries to be a simple tool that one can fire up to discover & connect to Signal K servers/gateways, more specifically to their streaming WebSocket service.
 
 Once connected the client verifies the schema compliance of the messages it receives and reports errors.
