@@ -19,8 +19,8 @@
 var deltaDebug = require("debug")("signalk:delta");
 var fullDebug = require("debug")("signalk:full");
 var JSONPath = require("JSONPath");
-var signalk_client = require("signalk-client");
-var schema = require("signalk-schema");
+var signalk_client = require("@signalk/client");
+var schema = require("@signalk/signalk-schema");
 var Spinner = require("cli-spinner").Spinner;
 
 var isDelta = signalk_client.isDelta;

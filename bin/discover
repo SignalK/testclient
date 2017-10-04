@@ -18,6 +18,7 @@
 var signalk_client = require("signalk-client");
 var client = new signalk_client.Client();
 
+console.log(signalk_client.Client.toString())
 client.on('discovery', discovery => {
   console.log(JSON.stringify(discovery, null, 2))
 })
